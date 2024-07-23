@@ -62,7 +62,7 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) =>{
     button.addEventListener('click',()=> {
         cartQuantity += 1;
         document.querySelector('.js-cart-quantity').innerHTML = `${cartQuantity}`;
-        const productId = `${button.dataset.productId}`;
+        const {productId}=button.dataset;
         console.log(productId);
         let matchingItem;
         cart.forEach((item) => {
@@ -72,7 +72,7 @@ document.querySelectorAll('.js-add-to-cart').forEach((button) =>{
 
 
         const quantitySelector=document.querySelector(`.js-quantity-selector-${productId}`);
-        selectedValue=quantitySelector.value;
+        selectedValue=Number(quantitySelector.value);
 
 
         if (!matchingItem) {
