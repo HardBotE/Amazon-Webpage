@@ -6,7 +6,11 @@ export let cart =JSON.parse(localStorage.getItem('cart')) || [
 function  saveToStorage(){
     localStorage.setItem('cart',JSON.stringify(cart));
 }
-export let cartQuantity = 0;
+let sum=null;
+cart.forEach((element)=>{
+    sum+=element.quantity;})
+export let cartQuantity=sum;
+
 export const addedMessageTimeouts = {};
 
 export function addToCart(button) {
@@ -24,8 +28,9 @@ export function addToCart(button) {
     } else {
         matchingItem.quantity += selectedValue;
     }
-
     cartQuantity += selectedValue;
+
+
     document.querySelector('.js-cart-quantity').textContent = cartQuantity;
 
     updateCartQuantity(productId);
@@ -46,7 +51,6 @@ export function updateCartQuantity(productId) {
         addedButton.classList.remove('added-to-cart-visible');
     }, 2000);
     addedMessageTimeouts[productId] = timeout;
-
     console.log(cart);
 }
 export function removeFromCart(productId){
@@ -54,6 +58,7 @@ export function removeFromCart(productId){
     cart.forEach((cartItem)=>{
         if(cartItem.productId!==productId)
         {
+            cartQuantity-=cartItem.quantity;
             newCart.push(cartItem);
         }
     });
