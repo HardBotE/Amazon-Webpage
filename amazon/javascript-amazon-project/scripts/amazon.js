@@ -1,12 +1,11 @@
-import {cart} from '../data/cart.js';
+import {addToCart} from '../data/cart.js';
 import {products} from "../data/products.js";
 
 let productsHTML = '';
 products.forEach((product) => {
     productsHTML += ` <div class="product-container">
           <div class="product-image-container">
-            <img class="product-image"
-              src="${product.image}">
+            <img class="product-image" src="${product.image}">
           </div>
 
           <div class="product-name limit-text-to-2-lines">
@@ -14,8 +13,7 @@ products.forEach((product) => {
           </div>
 
           <div class="product-rating-container">
-            <img class="product-rating-stars"
-              src="images/ratings/rating-${product.rating.stars * 10}.png">
+            <img class="product-rating-stars" src="images/ratings/rating-${product.rating.stars * 10}.png">
             <div class="product-rating-count link-primary">
               ${product.rating.count}
             </div>
@@ -51,53 +49,10 @@ products.forEach((product) => {
           data-product-id="${product.id}">
             Add to Cart
           </button>
-        </div>`
+        </div>`;
 });
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
-
-let cartQuantity = 0;
-const addedMessageTimeouts = {};
-
-function addToCart(button) {
-    const productId = button.dataset.productId;
-    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);
-    const selectedValue = Number(quantitySelector.value);
-
-    let matchingItem = cart.find(item => item.productId === productId);
-
-    if (!matchingItem) {
-        cart.push({
-            productId,
-            quantity: selectedValue
-        });
-    } else {
-        matchingItem.quantity += selectedValue;
-    }
-
-    cartQuantity += selectedValue;
-    document.querySelector('.js-cart-quantity').textContent = cartQuantity;
-
-    updateCartQuantity(productId);
-}
-
-function updateCartQuantity(productId) {
-    const addedButton = document.querySelector(`.js-added-to-cart-${productId}`);
-    addedButton.classList.add('added-to-cart-visible');
-
-    const prevId = addedMessageTimeouts[productId];
-
-    if (prevId) {
-        clearTimeout(prevId);
-    }
-
-    const timeout = setTimeout(() => {
-        addedButton.classList.remove('added-to-cart-visible');
-    }, 2000);
-    addedMessageTimeouts[productId] = timeout;
-
-    console.log(cart);
-}
 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
     button.addEventListener('click', () => {
