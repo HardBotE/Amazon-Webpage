@@ -11,5 +11,4 @@ export const  deliveryOptions=[{
         id:'3',
         delivery_time:1,
         priceInCents:999
-
     }];
