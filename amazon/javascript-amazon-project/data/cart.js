@@ -82,9 +82,6 @@ export function editCart(productId,quantity){
 
 export function updateDeliveryOption(productId,deliveryOptionId){
     let matchingItem = cart.find(item => item.productId === productId);
-    console.log(productId,deliveryOptionId);
     matchingItem.deliveryOption=deliveryOptionId;
-    console.log(matchingItem);
     saveToStorage();
-    console.log(cart);
 }
