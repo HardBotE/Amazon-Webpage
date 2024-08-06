@@ -1,28 +1,30 @@
-import { cart, removeFromCart, editCart, updateDeliveryOption,cartQuantity } from '../../data/cart.js';
+import { cart, removeFromCart, editCart, updateDeliveryOption,cartQuantity as quantity } from '../../data/cart.js';
 import { products } from "../../data/products.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
 import { deliveryOptions } from "../../data/deliveryOptions.js";
 import {renderPaymentSummary} from "./paymentSummary.js";
 
+let cartQuantity=quantity;
 
 export function renderOrderSummary(){
 
-    let checkoutHTML = '';
-    let cartQuantity = 0;
 
+    let checkoutHTML = '';
     cart.forEach((cartItem) => {
         const productId = cartItem.productId;
         const matchingProduct = products.find(product => product.id === productId);
-
         let selectedOption;
+        let deliveryDay;
         deliveryOptions.forEach(option => {
-            if (cartItem.deliveryOption === option.id)
+            if (cartItem.deliveryOption === option.id) {
                 selectedOption = option;
+                deliveryDay = option.delivery_time;
+            }
         });
 
         if (matchingProduct) {
             const today = dayjs();
-            const deliveryDate = today.add(selectedOption.delivery_time, 'days');
+            const deliveryDate = today.add(deliveryDay, 'days');
             const formatedDateHeader = deliveryDate.format('dddd, MMMM D');
 
             checkoutHTML += `
@@ -105,6 +107,7 @@ export function renderOrderSummary(){
             cartQuantity = calculateQuantity();
             updateCartQuantityDisplay(cartQuantity);
             document.querySelector(`.js-cart-item-container-${productId}`).remove();
+            renderOrderSummary();
             renderPaymentSummary();
         });
     });
@@ -127,6 +130,8 @@ export function renderOrderSummary(){
             document.querySelector(`.quantity-label-${productId}`).innerText = String(newQuantity);
             cartQuantity = calculateQuantity();
             updateCartQuantityDisplay(cartQuantity);
+            renderOrderSummary();
+            renderPaymentSummary();
             quantityInput.classList.remove('quantity-input-visible');
             link.classList.remove('save-quantity-link-visible');
 

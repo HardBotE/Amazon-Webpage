@@ -23,7 +23,8 @@ export function addToCart(button) {
     if (!matchingItem) {
         cart.push({
             productId,
-            quantity: selectedValue
+            quantity: selectedValue,
+            deliveryOption:'1'
         });
     } else {
         matchingItem.quantity += selectedValue;
